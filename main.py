@@ -35,7 +35,7 @@ async def start_bot(token: Token):
         session_id = bot_client.create_session()
         return {"message": "Bot iniciado", "session_id": session_id}
     except Exception as e:
-        HTTPException(detail="Error lol")
+        HTTPException(detail="Error lol", status_code=400)
 
 @app.post("/play-music")
 async def play_music(request: PlayMusicRequest):
