@@ -24,15 +24,18 @@ class PlayMusicRequest(BaseModel):
 
 @app.post("/start-bot")
 async def start_bot(token: Token):
-    global bot_thread
-    if bot_thread and bot_thread.is_alive():
-        raise HTTPException(status_code=400, detail="Bot ya está corriendo")
+    try:
+        global bot_thread
+        if bot_thread and bot_thread.is_alive():
+            raise HTTPException(status_code=400, detail="Bot ya está corriendo")
     
-    bot_thread = Thread(target=bot.run_bot, args=(token.token,))
-    bot_thread.start()
+        bot_thread = Thread(target=bot.run_bot, args=(token.token,))
+        bot_thread.start()
     
-    session_id = bot_client.create_session()
-    return {"message": "Bot iniciado", "session_id": session_id}
+        session_id = bot_client.create_session()
+        return {"message": "Bot iniciado", "session_id": session_id}
+    except Exception as e:
+        return {"message": "bot ya prendido", "session_id": session_id}
 
 @app.post("/play-music")
 async def play_music(request: PlayMusicRequest):
